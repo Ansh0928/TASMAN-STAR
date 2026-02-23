@@ -21,7 +21,7 @@ export default function OurBusinessPage() {
                     <Link href="/our-business/wholesale" className="group bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-xl transition-all hover:border-[#FF8543]">
                         <div className="h-48 bg-slate-100 overflow-hidden relative">
                             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors z-10" />
-                            <img src="https://images.unsplash.com/photo-1596423735880-5ec8039600a7?auto=format&fit=crop&q=80&w=600&h=400" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Wholesale" />
+                            <img src="/assets/wholesale.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Wholesale" />
                         </div>
                         <div className="p-6 flex flex-col items-center text-center">
                             <div className="w-12 h-12 bg-[#fff3ec] rounded-full flex items-center justify-center -mt-12 z-20 mb-3 shadow-md border-4 border-white">
@@ -36,7 +36,7 @@ export default function OurBusinessPage() {
                     <Link href="/our-business/fleets" className="group bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-xl transition-all hover:border-[#FF8543]">
                         <div className="h-48 bg-slate-100 overflow-hidden relative">
                             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors z-10" />
-                            <img src="https://images.unsplash.com/photo-1586864387789-628af9feed72?auto=format&fit=crop&q=80&w=600&h=400" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Refrigerated Trucks" />
+                            <img src="/tasman-star-fleet1.jpeg" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Refrigerated Trucks" />
                         </div>
                         <div className="p-6 flex flex-col items-center text-center">
                             <div className="w-12 h-12 bg-[#fff3ec] rounded-full flex items-center justify-center -mt-12 z-20 mb-3 shadow-md border-4 border-white">
@@ -51,7 +51,7 @@ export default function OurBusinessPage() {
                     <Link href="/our-business/retail-stores" className="group bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-xl transition-all hover:border-[#FF8543]">
                         <div className="h-48 bg-slate-100 overflow-hidden relative">
                             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors z-10" />
-                            <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=600&h=400" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Fish Market Store" />
+                            <img src="/assets/retail-store.jpeg" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Fish Market Store" />
                         </div>
                         <div className="p-6 flex flex-col items-center text-center">
                             <div className="w-12 h-12 bg-[#fff3ec] rounded-full flex items-center justify-center -mt-12 z-20 mb-3 shadow-md border-4 border-white">
