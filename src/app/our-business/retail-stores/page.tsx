@@ -20,7 +20,7 @@ export default function RetailStoresPage() {
                 {/* Labrador Store */}
                 <section className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden flex flex-col md:flex-row group">
                     <div className="w-full md:w-1/2 overflow-hidden">
-                        <img src="/assets/retail.png" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Labrador Store Market Fresh Fish" />
+                        <img src="/assets/retail-store.jpeg" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Labrador Store Market Fresh Fish" />
                     </div>
                     <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
                         <div className="inline-block bg-[#FF8543] text-white text-xs font-bold px-3 py-1 uppercase rounded mb-4 w-max">Flagship Store</div>
@@ -29,7 +29,7 @@ export default function RetailStoresPage() {
                         <div className="flex flex-col gap-4 text-slate-600">
                             <div className="flex items-start gap-3">
                                 <MapPin size={20} className="text-[#FF8543] mt-1 shrink-0" />
-                                <p>123 Marine Parade, Labrador<br />Queensland 4215</p>
+                                <p>5-7 Olsen Ave, Labrador<br />QLD 4215</p>
                             </div>
                             <div className="flex items-center gap-3">
                                 <Clock size={20} className="text-[#FF8543] shrink-0" />
@@ -46,7 +46,7 @@ export default function RetailStoresPage() {
                 {/* Varsity Lakes Store */}
                 <section className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden flex flex-col md:flex-row group">
                     <div className="w-full md:w-1/2 overflow-hidden order-1 md:order-2">
-                        <img src="https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&q=80&w=800&h=600" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Varsity Lakes Store Fresh Shellfish" />
+                        <img src="/assets/retail-store.jpeg" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Varsity Lakes Store Fresh Shellfish" />
                     </div>
                     <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center order-2 md:order-1">
                         <div className="inline-block bg-[#fff3ec] text-[#FF8543] border border-[#FF8543]/20 text-xs font-bold px-3 py-1 uppercase rounded mb-4 w-max">Local Branch</div>
@@ -55,7 +55,7 @@ export default function RetailStoresPage() {
                         <div className="flex flex-col gap-4 text-slate-600">
                             <div className="flex items-start gap-3">
                                 <MapPin size={20} className="text-[#FF8543] mt-1 shrink-0" />
-                                <p>45 Lake Street, Varsity Lakes<br />Queensland 4227</p>
+                                <p>20 Casua Dr, Varsity Lakes<br />QLD 4227</p>
                             </div>
                             <div className="flex items-center gap-3">
                                 <Clock size={20} className="text-[#FF8543] shrink-0" />
