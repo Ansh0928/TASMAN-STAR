@@ -101,9 +101,9 @@ export async function shopifyFetch<T>({
       ? { 'X-Shopify-Storefront-Access-Token': publicToken }
       : privateToken
         ? {
-            'Shopify-Storefront-Private-Token': privateToken,
-            'Shopify-Storefront-Buyer-IP': '127.0.0.1'
-          }
+          'Shopify-Storefront-Private-Token': privateToken,
+          'Shopify-Storefront-Buyer-IP': '127.0.0.1'
+        }
         : {};
 
     const result = await fetch(storefrontEndpoint, {
@@ -223,18 +223,44 @@ function getCSVProducts() {
   return products;
 }
 
+// Map each product to a unique local generated image by type
 function getSeafoodImage(handle: string): string {
   const h = handle.toLowerCase();
-  if (h.includes('oyster')) return 'https://images.unsplash.com/photo-1606731219412-7e283c4f2c9e?auto=format&fit=crop&q=80&w=400&h=400';
-  if (h.includes('prawn')) return 'https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&q=80&w=400&h=400';
-  if (h.includes('salmon')) return 'https://images.unsplash.com/photo-1599084990807-33433ed60b29?auto=format&fit=crop&q=80&w=400&h=400';
-  if (h.includes('octopus')) return 'https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?auto=format&fit=crop&q=80&w=400&h=400';
-  if (h.includes('crab')) return 'https://images.unsplash.com/photo-1559737558-2f5a35f4523b?auto=format&fit=crop&q=80&w=400&h=400';
-  if (h.includes('scallop')) return 'https://images.unsplash.com/photo-1534043464124-3be32fe000c9?auto=format&fit=crop&q=80&w=400&h=400';
-  if (h.includes('mussel')) return 'https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&q=80&w=400&h=400';
-  if (h.includes('whiting') || h.includes('cod') || h.includes('emperor') || h.includes('roughy') || h.includes('parrot'))
-    return 'https://images.unsplash.com/photo-1510130113600-521d55ac3ea8?auto=format&fit=crop&q=80&w=400&h=400';
-  return 'https://images.unsplash.com/photo-1534043464124-3be32fe000c9?auto=format&fit=crop&q=80&w=400&h=400';
+  // Oyster variants — use oyster image
+  if (h.includes('oyster') || h.includes('mornay') || h.includes('kilpatrick') || h.includes('vinaigrette') || h.includes('shucking'))
+    return '/assets/products/oysters-mornay.png';
+  // Prawn variants — use prawns image
+  if (h.includes('prawn') || h.includes('bisque'))
+    return '/assets/products/prawns.png';
+  // Salmon variants
+  if (h.includes('salmon') || h.includes('trout') || h.includes('gravalax') || h.includes('smoked'))
+    return '/assets/products/salmon.png';
+  // Octopus variants
+  if (h.includes('octopus'))
+    return '/assets/products/octopus.png';
+  // Crab variants
+  if (h.includes('crab'))
+    return '/assets/products/crabs.png';
+  // Scallop variants
+  if (h.includes('scallop'))
+    return '/assets/products/scallops.png';
+  // Mussel variants
+  if (h.includes('mussel'))
+    return '/assets/products/octopus.png';
+  // Fish fillets
+  if (h.includes('fillet') || h.includes('whiting') || h.includes('cod') || h.includes('emperor') || h.includes('roughy') || h.includes('parrot'))
+    return '/assets/products/fillets.png';
+  // Sashimi / platter
+  if (h.includes('sashimi') || h.includes('sushi') || h.includes('platter'))
+    return '/assets/sushi.jpeg';
+  // Pipis / shellfish
+  if (h.includes('pipi'))
+    return '/assets/products/scallops.png';
+  // Pickled / ginger / condiments
+  if (h.includes('pickled') || h.includes('ginger'))
+    return '/assets/products/octopus.png';
+  // Default
+  return '/assets/products/fillets.png';
 }
 
 async function fetchShopifyProductsUncached() {

@@ -5,8 +5,9 @@ import Link from 'next/link';
 import AddToCartBar from '@/components/AddToCartBar';
 import { notFound } from 'next/navigation';
 
-export default async function ProductPage({ params }: { params: { handle: string } }) {
-    const product = await getProduct(params.handle);
+export default async function ProductPage({ params }: { params: Promise<{ handle: string }> }) {
+    const { handle } = await params;
+    const product = await getProduct(handle);
 
     if (!product) {
         return notFound();

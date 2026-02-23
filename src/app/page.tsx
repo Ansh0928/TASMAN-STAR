@@ -4,16 +4,14 @@ import { Search, MapPin, ChevronRight, Tag } from 'lucide-react';
 import RegionalMapLazy from '@/components/map/RegionalMapLazy';
 
 const CATEGORIES = [
-  // ... categories array
-
-  { name: 'Fresh Catch', icon: '🐟', img: 'https://images.unsplash.com/photo-1534043464124-3be32fe000c9?auto=format&fit=crop&q=80&w=200&h=200' },
+  { name: 'Fresh Catch', icon: '🐟', img: '/assets/fresh.webp' },
   { name: 'Shellfish', icon: '🦞', img: 'https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&q=80&w=200&h=200' },
-  { name: 'Fillets', icon: '🔪', img: 'https://images.unsplash.com/photo-1599084990807-33433ed60b29?auto=format&fit=crop&q=80&w=200&h=200' },
-  { name: 'Bundles', icon: '📦', img: 'https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?auto=format&fit=crop&q=80&w=200&h=200' },
-  { name: 'Frozen', icon: '❄️', img: 'https://images.unsplash.com/photo-1557008064-5509e51c0993?auto=format&fit=crop&q=80&w=200&h=200' },
-  { name: 'Marinades', icon: '🍋', img: 'https://images.unsplash.com/photo-1607305387299-a3d9611cd469?auto=format&fit=crop&q=80&w=200&h=200' },
-  { name: 'Smoked', icon: '💨', img: 'https://images.unsplash.com/photo-1485921325833-c519f76c4927?auto=format&fit=crop&q=80&w=200&h=200' },
-  { name: 'Best Buys', icon: '⭐️', img: 'https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&q=80&w=200&h=200' },
+  { name: 'Fillets', icon: '🔪', img: '/assets/fillets.png' },
+  { name: 'Bundles', icon: '📦', img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=200&h=200' },
+  { name: 'Frozen', icon: '❄️', img: 'https://images.unsplash.com/photo-1559737558-2f5a35f4523b?auto=format&fit=crop&q=80&w=200&h=200' },
+  { name: 'Sauces', icon: '🍋', img: 'https://images.unsplash.com/photo-1472476443507-c7a5948772fc?auto=format&fit=crop&q=80&w=200&h=200' },
+  { name: 'Platters', icon: '🍣', img: '/assets/sushi.jpeg' },
+  { name: 'Best Buys', icon: '⭐️', img: '/assets/best.webp' },
 ];
 
 export default async function Home() {
