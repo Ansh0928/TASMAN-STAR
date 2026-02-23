@@ -13,7 +13,20 @@ const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfa
 
 export const metadata: Metadata = {
   title: 'Tasman Star Market | Premium Seafood',
-  description: 'Track your catch directly to the source with our interactive market experience.',
+  description: 'Fresh from the ocean, delivered to your door. Premium seafood from Tasman Star — prawns, oysters, salmon, platters & more.',
+  openGraph: {
+    title: 'Tasman Star Seafood Market',
+    description: 'Fresh from the ocean, delivered to your door. Premium seafood — prawns, oysters, salmon, platters & more.',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Tasman Star Seafood Market' }],
+    type: 'website',
+    siteName: 'Tasman Star Seafood Market',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Tasman Star Seafood Market',
+    description: 'Fresh from the ocean, delivered to your door. Premium seafood — prawns, oysters, salmon & more.',
+    images: ['/og-image.png'],
+  },
 }
 
 export default function RootLayout({
