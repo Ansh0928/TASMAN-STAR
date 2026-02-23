@@ -1,6 +1,11 @@
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 import Papa from 'papaparse';
+
+/** Sanitize handle for use in URLs - only allow alphanumeric and hyphens */
+function sanitizeHandleForUrl(handle: string): string {
+  return handle.replace(/[^a-zA-Z0-9-]/g, '').slice(0, 50) || 'seafood';
+}
 
 export interface ProductRow {
     Handle: string;
@@ -25,7 +30,12 @@ export interface ParsedProduct {
 
 export async function getMockProducts(): Promise<ParsedProduct[]> {
     const csvPath = path.join(process.cwd(), 'public', 'inventory_export.csv');
-    const fileContent = fs.readFileSync(csvPath, 'utf-8');
+    let fileContent: string;
+    try {
+        fileContent = await fs.readFile(csvPath, 'utf-8');
+    } catch {
+        return [];
+    }
 
     const result = Papa.parse<ProductRow>(fileContent, {
         header: true,
@@ -50,7 +60,7 @@ export async function getMockProducts(): Promise<ParsedProduct[]> {
                 title: row.Title,
                 location: loc, // Mapping Shopify Locations to "Catch Zones" for the mock
                 price: "$24.99", // Mocking price since it's an inventory CSV, not full products export
-                image: `https://source.unsplash.com/random/400x400/?seafood,${row.Handle.split('-')[0]}` // Mock images
+                image: `https://source.unsplash.com/random/400x400/?seafood,${sanitizeHandleForUrl(row.Handle.split('-')[0] || 'seafood')}` // Mock images
             });
         }
     });
