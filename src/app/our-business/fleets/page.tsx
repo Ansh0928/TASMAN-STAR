@@ -1,7 +1,5 @@
 import { Snowflake, Truck, MapPin, ShieldCheck, Clock, CheckCircle2, Phone, Mail } from 'lucide-react';
-import dynamic from 'next/dynamic';
-
-const FleetNetworkMap = dynamic(() => import('@/components/FleetNetworkMap'), { ssr: false });
+import FleetNetworkMapLazy from '@/components/FleetNetworkMapLazy';
 
 
 export default function FleetsPage() {
@@ -77,7 +75,7 @@ export default function FleetsPage() {
 
                 {/* 3. Delivery Network Map */}
                 <section className="w-full">
-                    <FleetNetworkMap />
+                    <FleetNetworkMapLazy />
                 </section>
 
                 {/* 4. Why Choose Our Delivery? */}
