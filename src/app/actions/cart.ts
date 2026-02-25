@@ -13,7 +13,7 @@ export async function createCartAction() {
 
 export async function getCartAction(cartId: string) {
     const trimmed = cartId?.trim();
-    if (!trimmed || trimmed.length > 100) return null;
+    if (!trimmed || trimmed.length > 200) return null;
     return await getCart(trimmed);
 }
 

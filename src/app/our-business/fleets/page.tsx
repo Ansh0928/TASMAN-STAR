@@ -1,5 +1,7 @@
 import { Snowflake, Truck, MapPin, ShieldCheck, Clock, CheckCircle2, Phone, Mail } from 'lucide-react';
-import FleetNetworkMap from '@/components/FleetNetworkMap';
+import dynamic from 'next/dynamic';
+
+const FleetNetworkMap = dynamic(() => import('@/components/FleetNetworkMap'), { ssr: false });
 
 
 export default function FleetsPage() {

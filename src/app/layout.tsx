@@ -6,6 +6,7 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 import CartIcon from '@/components/CartIcon';
 import CartSidebar from '@/components/CartSidebar';
 import ThemeToggle from '@/components/ThemeToggle';
+import SearchBar from '@/components/SearchBar';
 import Footer from '@/components/Footer';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
@@ -63,19 +64,7 @@ export default function RootLayout({
                   </nav>
 
                   {/* Central Search Bar */}
-                  <div className="hidden md:flex flex-1 max-w-xl mx-8 relative group">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-theme-muted group-focus-within:text-[#FF8543] transition-colors"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    </div>
-                    <input
-                      type="text"
-                      placeholder="Search for fresh seafood, platters, or regions..."
-                      className="w-full bg-theme-tertiary hover:bg-theme-secondary border-2 border-transparent transition-all text-theme-primary rounded-full py-3.5 pl-12 pr-6 text-[15px] focus:outline-none focus:border-[#FF8543] placeholder:text-theme-muted shadow-inner"
-                    />
-                    <div className="absolute inset-y-0 right-2 flex items-center">
-                      <button className="bg-[#FF8543] hover:bg-[#E2743A] text-white px-4 py-1.5 rounded-full text-sm font-bold transition-colors">Find</button>
-                    </div>
-                  </div>
+                  <SearchBar />
 
                   {/* Actions (Theme Toggle, Cart & Mobile Menu) */}
                   <div className="flex items-center gap-3 shrink-0">

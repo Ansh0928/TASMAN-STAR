@@ -3,7 +3,7 @@
  * Shopify GIDs are typically: gid://shopify/Cart/xxx or gid://shopify/ProductVariant/xxx
  */
 
-const SHOPIFY_GID_REGEX = /^gid:\/\/shopify\/[\w-]+\/[\w-]+$/;
+const SHOPIFY_GID_REGEX = /^gid:\/\/shopify\/[\w-]+\/[\w-]+(\?[\w=&%-]+)?$/;
 const MAX_QUANTITY = 99;
 const MAX_LINES = 50;
 const MAX_LINE_IDS = 100;
@@ -11,7 +11,7 @@ const MAX_LINE_IDS = 100;
 export function isValidCartId(cartId: string): boolean {
   if (!cartId || typeof cartId !== 'string') return false;
   const trimmed = cartId.trim();
-  if (trimmed.length > 100) return false;
+  if (trimmed.length > 200) return false;
   return SHOPIFY_GID_REGEX.test(trimmed) || /^[a-zA-Z0-9_-]+$/.test(trimmed);
 }
 

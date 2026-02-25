@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getShopifyProducts, getCollections } from '@/lib/shopify';
 import { MapPin, ChevronRight, Clock, Truck, ShieldCheck, Anchor } from 'lucide-react';
+import RegionalMapLazy from '@/components/map/RegionalMapLazy';
 
 // Map collection handles to display info
 const CATEGORY_META: Record<string, { icon: string; priority: number }> = {
@@ -170,6 +171,13 @@ export default async function Home() {
           {bestBuysFinal.slice(0, 8).map((product: any) => (
             <ProductCard key={product.handle} product={product} badge="Best Buy" />
           ))}
+        </div>
+      </section>
+
+      {/* Interactive Sourcing Map */}
+      <section className="container mx-auto px-4 md:px-6 py-8">
+        <div className="border-t border-theme-subtle pt-10">
+          <RegionalMapLazy />
         </div>
       </section>
 
