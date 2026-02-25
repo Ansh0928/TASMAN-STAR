@@ -1,4 +1,4 @@
-import { ClipboardList, Phone } from 'lucide-react';
+import { ClipboardList, Phone, Mail, Truck, Scissors, Star, MessageSquare } from 'lucide-react';
 
 export default function WholesalePage() {
     return (
@@ -11,101 +11,128 @@ export default function WholesalePage() {
                 <div className="relative z-20 text-center px-6">
                     <span className="text-[#FF8543] font-bold tracking-widest uppercase text-sm mb-2 block">Our Business</span>
                     <h1 className="font-serif text-5xl md:text-6xl font-bold text-white mb-4">Wholesale Supply</h1>
-                    <p className="text-xl text-slate-200 font-light max-w-xl mx-auto">Providing chefs and grocers with uncompromised quality.</p>
+                    <p className="text-xl text-slate-200 font-light max-w-xl mx-auto">Providing chefs and grocers with uncompromised quality, straight off the boats.</p>
                 </div>
             </div>
 
-            <main className="container mx-auto px-4 md:px-8 py-16 max-w-5xl">
+            <main className="container mx-auto px-4 md:px-8 py-16 max-w-5xl flex flex-col gap-8">
 
-                {/* Two Card Layout */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-                    {/* Card 1: Sign Up for Daily Products */}
-                    <div className="bg-theme-card rounded-3xl border border-theme-subtle shadow-lg overflow-hidden flex flex-col">
-                        <div className="bg-[#0A192F] p-8 text-center">
-                            <div className="w-16 h-16 rounded-full bg-[#FF8543]/10 flex items-center justify-center mx-auto mb-4">
-                                <ClipboardList size={32} className="text-[#FF8543]" />
-                            </div>
-                            <h2 className="font-serif text-2xl md:text-3xl font-bold text-white">Daily Product List</h2>
+                {/* Row 1: Features — Custom Filleting | Daily Deliveries | Exclusive Access */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="bg-theme-card rounded-2xl border border-theme-subtle p-6 shadow-sm text-center flex flex-col items-center">
+                        <div className="w-14 h-14 rounded-full bg-[#FF8543]/10 flex items-center justify-center mb-4">
+                            <Scissors size={26} className="text-[#FF8543]" />
                         </div>
-                        <div className="p-8 flex flex-col flex-grow">
-                            <p className="text-theme-muted text-center mb-6">
-                                Sign up to receive our daily wholesale product list so you always know what&apos;s fresh and available straight off the boats.
+                        <h3 className="font-serif text-lg font-bold text-theme-primary mb-2">Custom Filleting</h3>
+                        <p className="text-theme-muted text-sm">Tailored cuts and portion control to suit your menu.</p>
+                    </div>
+                    <div className="bg-theme-card rounded-2xl border border-theme-subtle p-6 shadow-sm text-center flex flex-col items-center">
+                        <div className="w-14 h-14 rounded-full bg-[#FF8543]/10 flex items-center justify-center mb-4">
+                            <Truck size={26} className="text-[#FF8543]" />
+                        </div>
+                        <h3 className="font-serif text-lg font-bold text-theme-primary mb-2">Daily Deliveries</h3>
+                        <p className="text-theme-muted text-sm">Fresh stock delivered to your door before 2pm, every day.</p>
+                    </div>
+                    <div className="bg-theme-card rounded-2xl border border-theme-subtle p-6 shadow-sm text-center flex flex-col items-center">
+                        <div className="w-14 h-14 rounded-full bg-[#FF8543]/10 flex items-center justify-center mb-4">
+                            <Star size={26} className="text-[#FF8543]" />
+                        </div>
+                        <h3 className="font-serif text-lg font-bold text-theme-primary mb-2">Exclusive Access</h3>
+                        <p className="text-theme-muted text-sm">First pick of limited and rare species.</p>
+                    </div>
+                </div>
+
+                {/* Row 2: Become a Partner | Contact Sales */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Become a Partner */}
+                    <div className="bg-theme-card rounded-3xl border border-theme-subtle shadow-lg overflow-hidden flex flex-col">
+                        <div className="bg-[#0A192F] p-6 text-center">
+                            <div className="w-14 h-14 rounded-full bg-[#FF8543]/10 flex items-center justify-center mx-auto mb-3">
+                                <ClipboardList size={28} className="text-[#FF8543]" />
+                            </div>
+                            <h2 className="font-serif text-2xl font-bold text-white">Become a Partner</h2>
+                        </div>
+                        <div className="p-6 flex flex-col flex-grow gap-4">
+                            <p className="text-theme-muted text-sm text-center">
+                                Register as a wholesale partner to access daily pricing, priority stock, and flexible delivery schedules.
                             </p>
-                            <ul className="space-y-3 text-theme-secondary text-sm mb-8">
-                                <li className="flex items-start gap-2">
-                                    <span className="text-[#FF8543] font-bold mt-0.5">&#10003;</span>
-                                    Daily updates on available catch
-                                </li>
-                                <li className="flex items-start gap-2">
-                                    <span className="text-[#FF8543] font-bold mt-0.5">&#10003;</span>
-                                    Wholesale pricing for registered partners
-                                </li>
-                                <li className="flex items-start gap-2">
-                                    <span className="text-[#FF8543] font-bold mt-0.5">&#10003;</span>
-                                    First access to limited &amp; rare species
-                                </li>
-                                <li className="flex items-start gap-2">
-                                    <span className="text-[#FF8543] font-bold mt-0.5">&#10003;</span>
-                                    Custom filleting &amp; portion control
-                                </li>
-                            </ul>
-                            <div className="mt-auto text-center">
+                            <div className="text-center">
                                 <a
                                     href="https://app.fresho.com/tasman-star-seafoods"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-block bg-[#FF8543] hover:bg-[#E2743A] text-white font-bold py-3 px-8 rounded-full transition-colors shadow-lg text-lg"
+                                    className="inline-block bg-[#FF8543] hover:bg-[#E2743A] text-white font-bold py-3 px-8 rounded-full transition-colors shadow-lg"
                                 >
-                                    Sign Up on Fresho
+                                    Order on Fresho
                                 </a>
                             </div>
                         </div>
                     </div>
 
-                    {/* Card 2: Contact the Sales Team */}
+                    {/* Contact Sales */}
                     <div className="bg-theme-card rounded-3xl border border-theme-subtle shadow-lg overflow-hidden flex flex-col">
                         <div className="bg-[#0A192F] p-8 text-center">
                             <div className="w-16 h-16 rounded-full bg-[#FF8543]/10 flex items-center justify-center mx-auto mb-4">
                                 <Phone size={32} className="text-[#FF8543]" />
                             </div>
-                            <h2 className="font-serif text-2xl md:text-3xl font-bold text-white">Contact Sales Team</h2>
+                            <h2 className="font-serif text-2xl font-bold text-white">Contact Sales</h2>
                         </div>
-                        <div className="p-8 flex flex-col flex-grow">
-                            <p className="text-theme-muted text-center mb-6">
-                                For more information about wholesale accounts, pricing, delivery schedules, or custom orders — get in touch with our sales team directly.
-                            </p>
-                            <div className="bg-[#0A192F] rounded-2xl p-6 text-center mb-8">
-                                <p className="text-slate-400 text-sm uppercase tracking-wider mb-2">Call The Sales Team</p>
-                                <a href="tel:04222222" className="text-3xl md:text-4xl font-bold text-[#FF8543] hover:text-[#E2743A] transition-colors">
-                                    04222222
-                                </a>
-                            </div>
-                            <ul className="space-y-3 text-theme-secondary text-sm mb-8">
-                                <li className="flex items-start gap-2">
-                                    <span className="text-[#FF8543] font-bold mt-0.5">&#10003;</span>
-                                    Dedicated account manager
-                                </li>
-                                <li className="flex items-start gap-2">
-                                    <span className="text-[#FF8543] font-bold mt-0.5">&#10003;</span>
-                                    Flexible delivery schedules
-                                </li>
-                                <li className="flex items-start gap-2">
-                                    <span className="text-[#FF8543] font-bold mt-0.5">&#10003;</span>
-                                    Volume-based pricing
-                                </li>
-                            </ul>
-                            <div className="mt-auto text-center">
-                                <a
-                                    href="tel:04222222"
-                                    className="inline-block bg-[#0A192F] hover:bg-[#112240] text-white font-bold py-3 px-8 rounded-full transition-colors shadow-lg text-lg border border-[#FF8543]/30"
-                                >
-                                    Call Now
-                                </a>
-                            </div>
+                        <div className="p-6 flex flex-col flex-grow gap-3">
+                            <a href="tel:04222222" className="flex items-center gap-4 bg-[#0A192F] rounded-2xl p-5 hover:bg-[#112240] transition-colors group">
+                                <div className="w-11 h-11 rounded-full bg-[#FF8543]/10 flex items-center justify-center shrink-0">
+                                    <Phone size={20} className="text-[#FF8543]" />
+                                </div>
+                                <div>
+                                    <p className="text-slate-400 text-xs uppercase tracking-wider">Call The Sales Team</p>
+                                    <p className="text-[#FF8543] font-bold text-xl">04222222</p>
+                                </div>
+                            </a>
+                            <a href="mailto:info@tasmanstar.com.au?subject=Wholesale Enquiry" className="flex items-center gap-4 bg-[#0A192F] rounded-2xl p-5 hover:bg-[#112240] transition-colors group">
+                                <div className="w-11 h-11 rounded-full bg-[#FF8543]/10 flex items-center justify-center shrink-0">
+                                    <MessageSquare size={20} className="text-[#FF8543]" />
+                                </div>
+                                <div>
+                                    <p className="text-slate-400 text-xs uppercase tracking-wider">Message Us</p>
+                                    <p className="text-white font-medium text-sm">Send an enquiry</p>
+                                </div>
+                            </a>
+                            <a href="mailto:info@tasmanstar.com.au" className="flex items-center gap-4 bg-[#0A192F] rounded-2xl p-5 hover:bg-[#112240] transition-colors group">
+                                <div className="w-11 h-11 rounded-full bg-[#FF8543]/10 flex items-center justify-center shrink-0">
+                                    <Mail size={20} className="text-[#FF8543]" />
+                                </div>
+                                <div>
+                                    <p className="text-slate-400 text-xs uppercase tracking-wider">Email</p>
+                                    <p className="text-white font-medium text-sm">info@tasmanstar.com.au</p>
+                                </div>
+                            </a>
                         </div>
                     </div>
+                </div>
 
+                {/* Row 3: Newsletter Sign Up — Full Width */}
+                <div className="bg-gradient-to-br from-[#0A192F] to-[#112240] rounded-3xl p-10 shadow-lg border border-[#FF8543]/20">
+                    <div className="max-w-xl mx-auto text-center">
+                        <Mail size={36} className="text-[#FF8543] mx-auto mb-4" />
+                        <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-3">
+                            Sign up to our Daily Product List
+                        </h2>
+                        <p className="text-slate-300 mb-8">
+                            to see what&apos;s available today
+                        </p>
+                        <form className="flex flex-col sm:flex-row gap-3">
+                            <input
+                                type="email"
+                                placeholder="Enter your email address"
+                                className="flex-grow bg-white/10 text-white placeholder-slate-400 px-5 py-3.5 rounded-full border border-white/20 focus:outline-none focus:border-[#FF8543] text-sm"
+                            />
+                            <button
+                                type="submit"
+                                className="bg-[#FF8543] hover:bg-[#E2743A] text-white font-bold py-3.5 px-8 rounded-full transition-colors shadow-lg whitespace-nowrap"
+                            >
+                                Subscribe
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
             </main>

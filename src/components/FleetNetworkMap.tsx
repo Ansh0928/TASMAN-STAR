@@ -11,24 +11,16 @@ import {
 
 const geoUrl = "/au-states.json";
 
-// Coordinates for the cities we want to include (omitting Perth and Darwin)
+// Coordinates for the cities on the East Coast
 const cities = {
+    bundaberg: { name: "Bundaberg", coordinates: [152.3489, -24.8662] as [number, number] },
     brisbane: { name: "Brisbane", coordinates: [153.0211, -27.4705] as [number, number] },
     sydney: { name: "Sydney", coordinates: [151.2093, -33.8688] as [number, number] },
-    melbourne: { name: "Melbourne", coordinates: [144.9631, -37.8136] as [number, number] },
-    adelaide: { name: "Adelaide", coordinates: [138.6007, -34.9285] as [number, number] },
-    hobart: { name: "Hobart", coordinates: [147.3272, -42.8821] as [number, number] },
-    bundaberg: { name: "Bundaberg", coordinates: [152.3489, -24.8662] as [number, number] }, // Roughly based on the image connections going north of Brisbane
 };
 
 const lines = [
-    // Primary lines
+    { from: cities.bundaberg.coordinates, to: cities.brisbane.coordinates },
     { from: cities.brisbane.coordinates, to: cities.sydney.coordinates },
-    { from: cities.sydney.coordinates, to: cities.melbourne.coordinates },
-    { from: cities.melbourne.coordinates, to: cities.adelaide.coordinates },
-    { from: cities.sydney.coordinates, to: cities.adelaide.coordinates },
-    { from: cities.melbourne.coordinates, to: cities.hobart.coordinates },
-    { from: cities.brisbane.coordinates, to: cities.bundaberg.coordinates },
 ];
 
 export default function FleetNetworkMap() {
