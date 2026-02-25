@@ -25,6 +25,8 @@
     "three": "^0.183.1"
   },
   "devDependencies": {
+    "@shopify/app": "^3.58.2",
+    "@shopify/cli": "^3.91.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

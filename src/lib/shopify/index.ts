@@ -1,10 +1,6 @@
-// ---- Shopify API Client ----
-// Uses the Admin API for product fetching (server-side only)
-// Storefront API for cart operations (server-side)
-//
-// Storefront tokens MUST come from: Settings → Apps and channels → Headless
-// (Create a storefront there and copy its Public/Private tokens.)
-// Tokens from "Apps → Develop apps" are Admin API only and will return UNAUTHORIZED/ACCESS_DENIED.
+// ---- Shopify Storefront API Client ----
+// All operations use the Storefront API via the Headless channel.
+// Tokens come from: Shopify Admin → Sales channels → Headless
 
 import { unstable_cache } from 'next/cache';
 
@@ -14,63 +10,16 @@ export const domain = process.env.SHOPIFY_STORE_DOMAIN
     : `https://${process.env.SHOPIFY_STORE_DOMAIN}`
   : '';
 
-// Admin API endpoint & token (works for server-side product fetching)
-export const adminEndpoint = `${domain}/admin/api/2024-01/graphql.json`;
-export const adminToken = process.env.SHOPIFY_ADMIN_ACCESS_TOKEN || '';
-
-// Storefront API endpoint & tokens (for cart)
 export const storefrontEndpoint = `${domain}/api/2024-01/graphql.json`;
 export const publicToken = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN || '';
-export const privateToken = process.env.SHOPIFY_STOREFRONT_PRIVATE_TOKEN || '';
 
-// Storefront is configured when we have domain + (private or public token)
-const isStorefrontConfigured =
+const isConfigured =
   !!domain &&
   domain !== 'https://' &&
   domain.includes('.myshopify.com') &&
-  (!!privateToken || !!publicToken);
+  !!publicToken;
 
-// ---- Admin API Fetch (for products) ----
-
-export async function adminFetch<T>({
-  query,
-  variables
-}: {
-  query: string;
-  variables?: any;
-}): Promise<{ status: number; body: T }> {
-  try {
-    const result = await fetch(adminEndpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Shopify-Access-Token': adminToken,
-      },
-      body: JSON.stringify({
-        ...(query && { query }),
-        ...(variables && { variables })
-      }),
-      cache: 'no-store'
-    });
-
-    const body = await result.json();
-
-    if (body.errors) {
-      console.error('Shopify Admin API errors:', body.errors);
-      throw body.errors[0];
-    }
-
-    return { status: result.status, body };
-  } catch (e) {
-    console.error('An error occurred while fetching from Shopify Admin API:', e);
-    throw {
-      status: 500,
-      body: { error: 'Failed to fetch from Shopify Admin API' } as any
-    };
-  }
-}
-
-// ---- Storefront API Fetch (for cart operations) ----
+// ---- Storefront API Fetch ----
 
 export async function shopifyFetch<T>({
   cache = 'force-cache',
@@ -85,315 +34,274 @@ export async function shopifyFetch<T>({
   tags?: string[];
   variables?: any;
 }): Promise<{ status: number; body: T }> {
-  if (!isStorefrontConfigured) {
-    throw {
-      status: 503,
-      body: {
-        error: 'Storefront API not configured',
-        message: 'Set SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_PRIVATE_TOKEN (or SHOPIFY_STOREFRONT_ACCESS_TOKEN) in .env.local'
-      } as any
-    };
+  if (!isConfigured) {
+    throw new Error('Storefront API not configured. Set SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_ACCESS_TOKEN in .env.local');
   }
 
+  const result = await fetch(storefrontEndpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Shopify-Storefront-Access-Token': publicToken,
+      ...headers
+    },
+    body: JSON.stringify({ query, variables }),
+    cache,
+    ...(tags && { next: { tags } })
+  });
+
+  const text = await result.text();
+  let body: any;
   try {
-    // Prefer public token (works server-side); private token often returns ACCESS_DENIED
-    const authHeaders: Record<string, string> = publicToken
-      ? { 'X-Shopify-Storefront-Access-Token': publicToken }
-      : privateToken
-        ? {
-          'Shopify-Storefront-Private-Token': privateToken,
-          'Shopify-Storefront-Buyer-IP': '127.0.0.1'
-        }
-        : {};
-
-    const result = await fetch(storefrontEndpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...authHeaders,
-        ...headers
-      },
-      body: JSON.stringify({
-        ...(query && { query }),
-        ...(variables && { variables })
-      }),
-      cache,
-      ...(tags && { next: { tags } })
-    });
-
-    const text = await result.text();
-    let body: any;
-    try {
-      body = text ? JSON.parse(text) : {};
-    } catch {
-      throw new Error(`Storefront API returned non-JSON: ${text.slice(0, 200)}`);
-    }
-
-    if (body.errors && Array.isArray(body.errors) && body.errors.length > 0) {
-      const err = body.errors[0];
-      const msg = typeof err === 'string' ? err : err?.message || JSON.stringify(err);
-      console.error('[Storefront API]', body.errors);
-      throw new Error(msg);
-    }
-
-    if (result.status >= 400) {
-      const msg = body?.errors?.[0]?.message || body?.error || `HTTP ${result.status}`;
-      throw new Error(msg);
-    }
-
-    return { status: result.status, body };
-  } catch (e) {
-    const message = e instanceof Error ? e.message : 'Failed to fetch from Shopify Storefront API';
-    console.error('[Storefront API]', message);
-    throw {
-      status: 500,
-      body: { error: message } as any
-    };
+    body = text ? JSON.parse(text) : {};
+  } catch {
+    throw new Error(`Storefront API returned non-JSON: ${text.slice(0, 200)}`);
   }
+
+  if (body.errors?.length) {
+    const msg = body.errors[0]?.message || JSON.stringify(body.errors[0]);
+    console.error('[Storefront API]', body.errors);
+    throw new Error(msg);
+  }
+
+  return { status: result.status, body };
 }
 
-// ---- GRAPHQL QUERIES (Admin API) ----
+// ---- Product Queries (Storefront API) ----
 
-const adminProductFragment = `
-  fragment AdminProductFragment on Product {
+const PRODUCT_FRAGMENT = `
+  fragment ProductFields on Product {
     id
     handle
     title
     description
-    featuredImage { url altText width height }
+    productType
     tags
-    variants(first: 5) {
+    featuredImage { url altText width height }
+    images(first: 5) {
+      edges { node { url altText width height } }
+    }
+    priceRange {
+      maxVariantPrice { amount currencyCode }
+      minVariantPrice { amount currencyCode }
+    }
+    variants(first: 10) {
       edges {
         node {
           id
           title
-          price
+          availableForSale
+          price { amount currencyCode }
+          compareAtPrice { amount currencyCode }
         }
       }
+    }
+    collections(first: 5) {
+      edges { node { handle title } }
     }
   }
 `;
 
-// ---- CSV FALLBACK (used when API tokens aren't working yet) ----
-
-import fs from 'fs';
-import path from 'path';
-
-function getCSVProducts() {
-  const csvPath = path.join(process.cwd(), 'inventory_export.csv');
-  if (!fs.existsSync(csvPath)) return [];
-
-  const content = fs.readFileSync(csvPath, 'utf-8');
-  const lines = content.split('\n').filter(l => l.trim());
-  if (lines.length < 2) return [];
-
-  const seen = new Set<string>();
-  const products: any[] = [];
-
-  // Skip header row
-  for (let i = 1; i < lines.length; i++) {
-    // Simple CSV parse (handles basic cases)
-    const cols = lines[i].split(',');
-    const handle = cols[0]?.trim();
-    const title = cols[1]?.trim();
-    if (!handle || !title || seen.has(handle)) continue;
-    seen.add(handle);
-
-    // Seafood category images by keyword
-    const img = getSeafoodImage(handle);
-
-    products.push({
-      handle,
-      title,
-      description: `Fresh ${title} from Tasman Star Seafood Market`,
-      featuredImage: { url: img, altText: title, width: 400, height: 400 },
-      priceRange: { maxVariantPrice: { amount: '24.99', currencyCode: 'AUD' } },
-      tags: [],
-      variants: {
-        edges: [{
-          node: {
-            id: `csv-variant-${handle}`,
-            title: 'Default',
-            price: { amount: '24.99', currencyCode: 'AUD' }
-          }
-        }]
-      }
-    });
-  }
-  return products;
-}
-
-// Map each product to a unique local generated image by type
-function getSeafoodImage(handle: string): string {
-  const h = handle.toLowerCase();
-  // Oyster variants — use oyster image
-  if (h.includes('oyster') || h.includes('mornay') || h.includes('kilpatrick') || h.includes('vinaigrette') || h.includes('shucking'))
-    return '/assets/products/oysters-mornay.png';
-  // Prawn variants — use prawns image
-  if (h.includes('prawn') || h.includes('bisque'))
-    return '/assets/products/prawns.png';
-  // Salmon variants
-  if (h.includes('salmon') || h.includes('trout') || h.includes('gravalax') || h.includes('smoked'))
-    return '/assets/products/salmon.png';
-  // Octopus variants
-  if (h.includes('octopus'))
-    return '/assets/products/octopus.png';
-  // Crab variants
-  if (h.includes('crab'))
-    return '/assets/products/crabs.png';
-  // Scallop variants
-  if (h.includes('scallop'))
-    return '/assets/products/scallops.png';
-  // Mussel variants
-  if (h.includes('mussel'))
-    return '/assets/products/octopus.png';
-  // Fish fillets
-  if (h.includes('fillet') || h.includes('whiting') || h.includes('cod') || h.includes('emperor') || h.includes('roughy') || h.includes('parrot'))
-    return '/assets/products/fillets.png';
-  // Sashimi / platter
-  if (h.includes('sashimi') || h.includes('sushi') || h.includes('platter'))
-    return '/assets/sushi.jpeg';
-  // Pipis / shellfish
-  if (h.includes('pipi'))
-    return '/assets/products/scallops.png';
-  // Pickled / ginger / condiments
-  if (h.includes('pickled') || h.includes('ginger'))
-    return '/assets/products/octopus.png';
-  // Default
-  return '/assets/products/fillets.png';
-}
-
-async function fetchShopifyProductsUncached() {
-  // Try Admin API first
+async function fetchAllProducts() {
   try {
-    const query = `
-      ${adminProductFragment}
-      query getProducts {
-        products(first: 20, sortKey: PUBLISHED_AT, reverse: true) {
-          edges { node { ...AdminProductFragment } }
+    const res = await shopifyFetch<any>({
+      query: `
+        ${PRODUCT_FRAGMENT}
+        query getAllProducts {
+          products(first: 100, sortKey: TITLE) {
+            edges { node { ...ProductFields } }
+          }
         }
-      }
-    `;
-    const res = await adminFetch<any>({ query });
-    const products = res.body.data?.products?.edges?.map((e: any) => {
-      const node = e.node;
-      const firstVariant = node.variants?.edges?.[0]?.node;
-      return {
-        ...node,
-        priceRange: { maxVariantPrice: { amount: firstVariant?.price || '0', currencyCode: 'AUD' } },
-        variants: {
-          edges: node.variants?.edges?.map((ve: any) => ({
-            node: { ...ve.node, price: { amount: ve.node.price, currencyCode: 'AUD' } }
-          })) || []
-        }
-      };
-    }) || [];
-    if (products.length > 0) return products;
+      `,
+      cache: 'no-store',
+      tags: ['products']
+    });
+    return res.body.data?.products?.edges?.map((e: any) => e.node) || [];
   } catch (e) {
-    console.warn('[getShopifyProducts] Admin API failed, falling back to CSV:', e instanceof Error ? e.message : e);
+    console.error('[getShopifyProducts] Storefront API failed:', e instanceof Error ? e.message : e);
+    return [];
   }
-
-  // Fallback to CSV data
-  return getCSVProducts();
 }
 
 export async function getShopifyProducts() {
   return unstable_cache(
-    fetchShopifyProductsUncached,
+    fetchAllProducts,
     ['shopify-products'],
     { revalidate: 60, tags: ['products'] }
   )();
 }
 
-async function fetchProductUncached(handle: string) {
-  // Try Admin API first
+async function fetchProduct(handle: string) {
   try {
-    const query = `
-      ${adminProductFragment}
-      query getProduct($handle: String!) {
-        productByHandle(handle: $handle) { ...AdminProductFragment }
-      }
-    `;
-    const res = await adminFetch<any>({ query, variables: { handle } });
-    const product = res.body.data?.productByHandle;
-    if (product) {
-      const firstVariant = product.variants?.edges?.[0]?.node;
-      return {
-        ...product,
-        priceRange: { maxVariantPrice: { amount: firstVariant?.price || '0', currencyCode: 'AUD' } },
-        variants: {
-          edges: product.variants?.edges?.map((ve: any) => ({
-            node: { ...ve.node, price: { amount: ve.node.price, currencyCode: 'AUD' } }
-          })) || []
+    const res = await shopifyFetch<any>({
+      query: `
+        ${PRODUCT_FRAGMENT}
+        query getProduct($handle: String!) {
+          product(handle: $handle) { ...ProductFields }
         }
-      };
-    }
+      `,
+      variables: { handle },
+      cache: 'no-store',
+      tags: ['products']
+    });
+    return res.body.data?.product ?? null;
   } catch (e) {
-    console.warn('[getProduct] Admin API failed, falling back to CSV:', e instanceof Error ? e.message : e);
+    console.error('[getProduct] Storefront API failed:', e instanceof Error ? e.message : e);
+    return null;
   }
-
-  const all = getCSVProducts();
-  return all.find((p: any) => p.handle === handle) || null;
 }
 
 export async function getProduct(handle: string) {
   return unstable_cache(
-    () => fetchProductUncached(handle),
+    () => fetchProduct(handle),
     ['product', handle],
     { revalidate: 60, tags: ['products'] }
   )();
 }
 
-// ---- Storefront connection test (for debugging) ----
+// ---- Collection Queries ----
 
-export async function testStorefrontConnection(): Promise<{ ok: boolean; shopName?: string; error?: string }> {
-  if (!isStorefrontConfigured) {
-    return { ok: false, error: 'Storefront not configured (missing SHOPIFY_STORE_DOMAIN or tokens)' };
-  }
+async function fetchCollections() {
   try {
-    const res = await shopifyFetch<{ data?: { shop?: { name: string } }; errors?: any[] }>({
-      query: `query { shop { name } }`,
-      cache: 'no-store'
+    const res = await shopifyFetch<any>({
+      query: `
+        query getCollections {
+          collections(first: 20) {
+            edges {
+              node {
+                id
+                handle
+                title
+                description
+                image { url altText width height }
+                products(first: 4) {
+                  edges {
+                    node {
+                      id
+                      handle
+                      title
+                      featuredImage { url altText width height }
+                      priceRange { minVariantPrice { amount currencyCode } }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      `,
+      cache: 'no-store',
+      tags: ['collections']
     });
-    const name = res.body.data?.shop?.name;
-    if (name) return { ok: true, shopName: name };
-    const err = res.body.errors?.[0];
-    return { ok: false, error: err?.message ?? JSON.stringify(res.body) };
-  } catch (e: any) {
-    return { ok: false, error: e?.message ?? e?.body?.error ?? String(e) };
+    return res.body.data?.collections?.edges?.map((e: any) => e.node) || [];
+  } catch (e) {
+    console.error('[getCollections] failed:', e instanceof Error ? e.message : e);
+    return [];
   }
 }
 
-// ---- Cart operations (Storefront API) ----
+export async function getCollections() {
+  return unstable_cache(
+    fetchCollections,
+    ['shopify-collections'],
+    { revalidate: 60, tags: ['collections'] }
+  )();
+}
 
-const getCartQuery = `
-  query getCart($cartId: ID!) {
-    cart(id: $cartId) {
-      id
-      checkoutUrl
-      cost {
-        subtotalAmount { amount currencyCode }
-        totalAmount { amount currencyCode }
-        totalTaxAmount { amount currencyCode }
-      }
-      lines(first: 100) {
-        edges {
-          node {
+async function fetchCollectionByHandle(handle: string) {
+  try {
+    const res = await shopifyFetch<any>({
+      query: `
+        ${PRODUCT_FRAGMENT}
+        query getCollection($handle: String!) {
+          collection(handle: $handle) {
             id
-            quantity
-            cost {
-              totalAmount { amount currencyCode }
+            handle
+            title
+            description
+            image { url altText width height }
+            products(first: 50) {
+              edges { node { ...ProductFields } }
             }
-            merchandise {
-              ... on ProductVariant {
+          }
+        }
+      `,
+      variables: { handle },
+      cache: 'no-store',
+      tags: ['collections']
+    });
+    return res.body.data?.collection ?? null;
+  } catch (e) {
+    console.error('[getCollection] failed:', e instanceof Error ? e.message : e);
+    return null;
+  }
+}
+
+export async function getCollection(handle: string) {
+  return unstable_cache(
+    () => fetchCollectionByHandle(handle),
+    ['collection', handle],
+    { revalidate: 60, tags: ['collections'] }
+  )();
+}
+
+// ---- Search ----
+
+export async function searchProducts(query: string) {
+  if (!query.trim()) return [];
+  try {
+    const res = await shopifyFetch<any>({
+      query: `
+        ${PRODUCT_FRAGMENT}
+        query searchProducts($query: String!) {
+          search(query: $query, first: 20, types: PRODUCT) {
+            edges {
+              node {
+                ... on Product { ...ProductFields }
+              }
+            }
+          }
+        }
+      `,
+      variables: { query },
+      cache: 'no-store'
+    });
+    return res.body.data?.search?.edges?.map((e: any) => e.node) || [];
+  } catch (e) {
+    console.error('[searchProducts] failed:', e instanceof Error ? e.message : e);
+    return [];
+  }
+}
+
+// ---- Cart Operations ----
+
+const CART_FRAGMENT = `
+  fragment CartFields on Cart {
+    id
+    checkoutUrl
+    cost {
+      subtotalAmount { amount currencyCode }
+      totalAmount { amount currencyCode }
+      totalTaxAmount { amount currencyCode }
+    }
+    lines(first: 100) {
+      edges {
+        node {
+          id
+          quantity
+          cost {
+            totalAmount { amount currencyCode }
+          }
+          merchandise {
+            ... on ProductVariant {
+              id
+              title
+              price { amount currencyCode }
+              product {
                 id
+                handle
                 title
-                product {
-                  id
-                  handle
-                  title
-                  featuredImage { url altText width height }
-                }
+                featuredImage { url altText width height }
               }
             }
           }
@@ -403,11 +311,42 @@ const getCartQuery = `
   }
 `;
 
-export async function getCart(cartId: string) {
-  if (!isStorefrontConfigured) return null;
+export async function createCart() {
+  if (!isConfigured) return null;
   try {
     const res = await shopifyFetch<any>({
-      query: getCartQuery,
+      query: `
+        ${CART_FRAGMENT}
+        mutation createCart {
+          cartCreate {
+            cart { ...CartFields }
+            userErrors { field message }
+          }
+        }
+      `,
+      cache: 'no-store'
+    });
+    const payload = res.body.data?.cartCreate;
+    if (payload?.userErrors?.length) {
+      console.error('[cartCreate] userErrors:', payload.userErrors);
+      return null;
+    }
+    return payload?.cart ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export async function getCart(cartId: string) {
+  if (!isConfigured) return null;
+  try {
+    const res = await shopifyFetch<any>({
+      query: `
+        ${CART_FRAGMENT}
+        query getCart($cartId: ID!) {
+          cart(id: $cartId) { ...CartFields }
+        }
+      `,
       variables: { cartId },
       cache: 'no-store'
     });
@@ -417,82 +356,86 @@ export async function getCart(cartId: string) {
   }
 }
 
-export async function createCart() {
-  if (!isStorefrontConfigured) return null;
-  try {
-    const query = `
-      mutation createCart {
-        cartCreate {
-          cart { id checkoutUrl }
+export async function addToCart(cartId: string, lines: { merchandiseId: string; quantity: number }[]) {
+  if (!isConfigured) return null;
+  const res = await shopifyFetch<any>({
+    query: `
+      ${CART_FRAGMENT}
+      mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
+        cartLinesAdd(cartId: $cartId, lines: $lines) {
+          cart { ...CartFields }
           userErrors { field message }
         }
       }
-    `;
-    const res = await shopifyFetch<any>({ query, cache: 'no-store' });
-    const payload = res.body.data?.cartCreate;
-    if (payload?.userErrors?.length) {
-      console.error('[Storefront API] cartCreate userErrors:', payload.userErrors);
-      return null;
-    }
-    return payload?.cart ?? null;
-  } catch {
-    return null;
-  }
-}
-
-export async function addToCart(cartId: string, lines: { merchandiseId: string; quantity: number }[]) {
-  if (!isStorefrontConfigured) return null;
-  const query = `
-    mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
-      cartLinesAdd(cartId: $cartId, lines: $lines) {
-        cart { id }
-        userErrors { field message }
-      }
-    }
-  `;
-  const res = await shopifyFetch<any>({ query, variables: { cartId, lines }, cache: 'no-store' });
+    `,
+    variables: { cartId, lines },
+    cache: 'no-store'
+  });
   const payload = res.body.data?.cartLinesAdd;
   if (payload?.userErrors?.length) {
-    console.error('[Storefront API] cartLinesAdd userErrors:', payload.userErrors);
     throw new Error(payload.userErrors[0]?.message || 'Failed to add to cart');
   }
   return payload?.cart ?? null;
 }
 
 export async function removeFromCart(cartId: string, lineIds: string[]) {
-  if (!isStorefrontConfigured) return null;
-  const query = `
-    mutation cartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
-      cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
-        cart { id }
-        userErrors { field message }
+  if (!isConfigured) return null;
+  const res = await shopifyFetch<any>({
+    query: `
+      ${CART_FRAGMENT}
+      mutation cartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
+        cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
+          cart { ...CartFields }
+          userErrors { field message }
+        }
       }
-    }
-  `;
-  const res = await shopifyFetch<any>({ query, variables: { cartId, lineIds }, cache: 'no-store' });
+    `,
+    variables: { cartId, lineIds },
+    cache: 'no-store'
+  });
   const payload = res.body.data?.cartLinesRemove;
   if (payload?.userErrors?.length) {
-    console.error('[Storefront API] cartLinesRemove userErrors:', payload.userErrors);
     throw new Error(payload.userErrors[0]?.message || 'Failed to remove from cart');
   }
   return payload?.cart ?? null;
 }
 
 export async function updateCart(cartId: string, lines: { id: string; merchandiseId?: string; quantity: number }[]) {
-  if (!isStorefrontConfigured) return null;
-  const query = `
-    mutation cartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
-      cartLinesUpdate(cartId: $cartId, lines: $lines) {
-        cart { id }
-        userErrors { field message }
+  if (!isConfigured) return null;
+  const res = await shopifyFetch<any>({
+    query: `
+      ${CART_FRAGMENT}
+      mutation cartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
+        cartLinesUpdate(cartId: $cartId, lines: $lines) {
+          cart { ...CartFields }
+          userErrors { field message }
+        }
       }
-    }
-  `;
-  const res = await shopifyFetch<any>({ query, variables: { cartId, lines }, cache: 'no-store' });
+    `,
+    variables: { cartId, lines },
+    cache: 'no-store'
+  });
   const payload = res.body.data?.cartLinesUpdate;
   if (payload?.userErrors?.length) {
-    console.error('[Storefront API] cartLinesUpdate userErrors:', payload.userErrors);
     throw new Error(payload.userErrors[0]?.message || 'Failed to update cart');
   }
   return payload?.cart ?? null;
+}
+
+// ---- Connection Test ----
+
+export async function testStorefrontConnection(): Promise<{ ok: boolean; shopName?: string; error?: string }> {
+  if (!isConfigured) {
+    return { ok: false, error: 'Storefront not configured' };
+  }
+  try {
+    const res = await shopifyFetch<any>({
+      query: `query { shop { name } }`,
+      cache: 'no-store'
+    });
+    const name = res.body.data?.shop?.name;
+    return name ? { ok: true, shopName: name } : { ok: false, error: 'No shop name returned' };
+  } catch (e: any) {
+    return { ok: false, error: e?.message ?? String(e) };
+  }
 }

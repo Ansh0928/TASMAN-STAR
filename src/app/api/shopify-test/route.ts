@@ -2,46 +2,42 @@ import { NextResponse } from 'next/server';
 import { getShopifyProducts, createCart, testStorefrontConnection } from '@/lib/shopify';
 
 export async function GET() {
-    const results: { admin: boolean; storefront: boolean; adminError?: string; storefrontError?: string; productCount?: number } = {
-        admin: false,
+    const results: {
+        storefront: boolean;
+        storefrontError?: string;
+        shopName?: string;
+        productCount?: number;
+        cartCreated?: boolean;
+    } = {
         storefront: false
     };
 
-    // Test Admin API (products)
+    // Test connection
+    const conn = await testStorefrontConnection();
+    results.storefront = conn.ok;
+    results.shopName = conn.shopName;
+    if (!conn.ok) {
+        results.storefrontError = conn.error;
+    }
+
+    // Test product fetching
     try {
         const products = await getShopifyProducts();
-        results.admin = true;
         results.productCount = products.length;
     } catch (error: unknown) {
-        results.adminError = process.env.NODE_ENV === 'development'
-            ? (error instanceof Error ? error.message : String(error))
-            : 'Admin API configuration error';
+        results.storefrontError = error instanceof Error ? error.message : String(error);
     }
 
-    // Test Storefront API (cart create + connection test for details)
+    // Test cart creation
     try {
         const cart = await createCart();
-        results.storefront = !!cart;
-        if (!cart) {
-            const conn = await testStorefrontConnection();
-            results.storefrontError = process.env.NODE_ENV === 'development'
-                ? (conn.error ?? 'createCart returned null (check Storefront token/scopes)')
-                : 'Storefront API configuration error';
-        }
-    } catch (error: unknown) {
-        results.storefrontError = process.env.NODE_ENV === 'development'
-            ? (error instanceof Error ? error.message : String(error))
-            : 'Storefront API configuration error';
+        results.cartCreated = !!cart;
+    } catch {
+        results.cartCreated = false;
     }
 
-    const allOk = results.admin && results.storefront;
     return NextResponse.json({
-        success: allOk,
-        message: allOk
-            ? 'Admin API and Storefront API are working.'
-            : 'One or more APIs failed. See details below.',
-        admin: results.admin ? 'OK' : results.adminError,
-        storefront: results.storefront ? 'OK' : results.storefrontError,
-        ...(results.productCount != null && { productCount: results.productCount })
-    }, { status: allOk ? 200 : 500 });
+        success: results.storefront && (results.productCount ?? 0) > 0 && results.cartCreated,
+        ...results
+    }, { status: results.storefront ? 200 : 500 });
 }
