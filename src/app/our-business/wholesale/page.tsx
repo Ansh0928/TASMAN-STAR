@@ -1,9 +1,10 @@
-import { PackageCheck, Timer, BadgePlus } from 'lucide-react';
+import { ClipboardList, Phone } from 'lucide-react';
 
 export default function WholesalePage() {
     return (
-        <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+        <div className="min-h-screen bg-theme-primary flex flex-col transition-colors duration-300">
 
+            {/* Hero */}
             <div className="w-full h-[40vh] relative overflow-hidden flex items-center justify-center">
                 <div className="absolute inset-0 bg-black/50 z-10" />
                 <img src="/assets/wholesale.png" className="absolute inset-0 w-full h-full object-cover" alt="Wholesale Fish Market" />
@@ -14,40 +15,97 @@ export default function WholesalePage() {
                 </div>
             </div>
 
-            <main className="container mx-auto px-4 md:px-8 py-16 max-w-4xl">
+            <main className="container mx-auto px-4 md:px-8 py-16 max-w-5xl">
 
-                <div className="prose prose-lg prose-slate max-w-none text-center mb-16">
-                    <p className="text-slate-600 text-lg leading-relaxed">
-                        We understand that the foundation of a great restaurant is the consistency and quality of its ingredients. Tasman Star is the chosen seafood partner for over 150 top-tier restaurants, hotels, and independent grocers across the region.
-                    </p>
-                </div>
+                {/* Two Card Layout */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-                    <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center text-center">
-                        <PackageCheck size={40} className="text-[#FF8543] mb-4" />
-                        <h3 className="font-bold text-xl text-black mb-2">Custom Filleting</h3>
-                        <p className="text-slate-500 text-sm">Portion-controlled cuts matching your exact kitchen specifications to reduce prep time.</p>
+                    {/* Card 1: Sign Up for Daily Products */}
+                    <div className="bg-theme-card rounded-3xl border border-theme-subtle shadow-lg overflow-hidden flex flex-col">
+                        <div className="bg-[#0A192F] p-8 text-center">
+                            <div className="w-16 h-16 rounded-full bg-[#FF8543]/10 flex items-center justify-center mx-auto mb-4">
+                                <ClipboardList size={32} className="text-[#FF8543]" />
+                            </div>
+                            <h2 className="font-serif text-2xl md:text-3xl font-bold text-white">Daily Product List</h2>
+                        </div>
+                        <div className="p-8 flex flex-col flex-grow">
+                            <p className="text-theme-muted text-center mb-6">
+                                Sign up to receive our daily wholesale product list so you always know what&apos;s fresh and available straight off the boats.
+                            </p>
+                            <ul className="space-y-3 text-theme-secondary text-sm mb-8">
+                                <li className="flex items-start gap-2">
+                                    <span className="text-[#FF8543] font-bold mt-0.5">&#10003;</span>
+                                    Daily updates on available catch
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-[#FF8543] font-bold mt-0.5">&#10003;</span>
+                                    Wholesale pricing for registered partners
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-[#FF8543] font-bold mt-0.5">&#10003;</span>
+                                    First access to limited &amp; rare species
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-[#FF8543] font-bold mt-0.5">&#10003;</span>
+                                    Custom filleting &amp; portion control
+                                </li>
+                            </ul>
+                            <div className="mt-auto text-center">
+                                <a
+                                    href="https://app.fresho.com/tasman-star-seafoods"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-block bg-[#FF8543] hover:bg-[#E2743A] text-white font-bold py-3 px-8 rounded-full transition-colors shadow-lg text-lg"
+                                >
+                                    Sign Up on Fresho
+                                </a>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center text-center">
-                        <Timer size={40} className="text-[#FF8543] mb-4" />
-                        <h3 className="font-bold text-xl text-black mb-2">Daily Deliveries</h3>
-                        <p className="text-slate-500 text-sm">Order by midnight for 6 AM guaranteed delivery before your prep kitchen opens.</p>
+                    {/* Card 2: Contact the Sales Team */}
+                    <div className="bg-theme-card rounded-3xl border border-theme-subtle shadow-lg overflow-hidden flex flex-col">
+                        <div className="bg-[#0A192F] p-8 text-center">
+                            <div className="w-16 h-16 rounded-full bg-[#FF8543]/10 flex items-center justify-center mx-auto mb-4">
+                                <Phone size={32} className="text-[#FF8543]" />
+                            </div>
+                            <h2 className="font-serif text-2xl md:text-3xl font-bold text-white">Contact Sales Team</h2>
+                        </div>
+                        <div className="p-8 flex flex-col flex-grow">
+                            <p className="text-theme-muted text-center mb-6">
+                                For more information about wholesale accounts, pricing, delivery schedules, or custom orders — get in touch with our sales team directly.
+                            </p>
+                            <div className="bg-[#0A192F] rounded-2xl p-6 text-center mb-8">
+                                <p className="text-slate-400 text-sm uppercase tracking-wider mb-2">Call The Sales Team</p>
+                                <a href="tel:04222222" className="text-3xl md:text-4xl font-bold text-[#FF8543] hover:text-[#E2743A] transition-colors">
+                                    04222222
+                                </a>
+                            </div>
+                            <ul className="space-y-3 text-theme-secondary text-sm mb-8">
+                                <li className="flex items-start gap-2">
+                                    <span className="text-[#FF8543] font-bold mt-0.5">&#10003;</span>
+                                    Dedicated account manager
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-[#FF8543] font-bold mt-0.5">&#10003;</span>
+                                    Flexible delivery schedules
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-[#FF8543] font-bold mt-0.5">&#10003;</span>
+                                    Volume-based pricing
+                                </li>
+                            </ul>
+                            <div className="mt-auto text-center">
+                                <a
+                                    href="tel:04222222"
+                                    className="inline-block bg-[#0A192F] hover:bg-[#112240] text-white font-bold py-3 px-8 rounded-full transition-colors shadow-lg text-lg border border-[#FF8543]/30"
+                                >
+                                    Call Now
+                                </a>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center text-center">
-                        <BadgePlus size={40} className="text-[#FF8543] mb-4" />
-                        <h3 className="font-bold text-xl text-black mb-2">Exclusive Access</h3>
-                        <p className="text-slate-500 text-sm">Wholesale partners get first pick of rare, limited catch items coming off the boats.</p>
-                    </div>
-                </div>
-
-                <div className="bg-[#fff3ec] rounded-3xl p-8 md:p-12 text-center border border-[#FF8543]/20">
-                    <h2 className="font-serif text-3xl font-bold text-black mb-4">Become a Partner</h2>
-                    <p className="text-slate-600 mb-8 max-w-xl mx-auto">Fill out a basic credit application and get assigned a dedicated account manager within 24 hours.</p>
-                    <a href="https://app.fresho.com/tasman-star-seafoods" target="_blank" rel="noopener noreferrer" className="bg-[#FF8543] hover:bg-[#E2743A] text-black font-bold py-4 px-10 rounded-full transition-all text-lg shadow-[0_0_20px_rgba(255,133,67,0.3)] hover:shadow-[0_0_30px_rgba(255,133,67,0.5)] inline-block mt-4 md:mt-0">
-                        Order via Fresho
-                    </a>
                 </div>
 
             </main>

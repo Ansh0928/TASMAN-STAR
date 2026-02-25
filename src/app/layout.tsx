@@ -56,11 +56,14 @@ export default function RootLayout({
 
                   {/* Desktop Nav Links */}
                   <nav className="hidden lg:flex items-center gap-6 font-sans font-medium text-sm text-theme-secondary ml-4 shrink-0">
+                    <a href="/" className="hover:text-[#E2743A] transition-colors">Our Business</a>
+                    <a href="/about" className="hover:text-[#E2743A] transition-colors">About Us</a>
+                    <a href="/our-partner" className="hover:text-[#E2743A] transition-colors">Our Partner</a>
+                    <a href="/our-products" className="hover:text-[#E2743A] transition-colors">Our Products</a>
                     <a href="/deals" className="hover:text-[#E2743A] transition-colors flex items-center gap-1 bg-theme-toggle border border-theme-toggle-border px-3 py-1.5 rounded-full">
                       <span className="w-2 h-2 rounded-full bg-[#FF7F50] animate-pulse"></span>
                       Deals
                     </a>
-                    <a href="/our-business" className="hover:text-[#E2743A] transition-colors">Our Business</a>
                   </nav>
 
                   {/* Central Search Bar */}

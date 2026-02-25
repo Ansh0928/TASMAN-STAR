@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Box, Store, Globe, Truck, Anchor, MapPin, ChevronRight, Clock, ShieldCheck } from 'lucide-react';
-import { getShopifyProducts, getCollections } from '@/lib/shopify';
+import { getShopifyProducts } from '@/lib/shopify';
 import RegionalMapLazy from '@/components/map/RegionalMapLazy';
 
 const BUSINESS_CARDS = [
@@ -20,7 +20,7 @@ const BUSINESS_CARDS = [
         image: '/assets/retail-store.jpeg',
     },
     {
-        href: '/our-business/online-delivery',
+        href: '/our-products',
         icon: Globe,
         title: 'Online & Delivery',
         description: 'Order premium seafood online and get it delivered fresh to your door on the Gold Coast.',
@@ -42,30 +42,12 @@ const BUSINESS_CARDS = [
     },
 ];
 
-const CATEGORY_META: Record<string, { icon: string; priority: number }> = {
-    'prawns': { icon: '🦐', priority: 1 },
-    'oyster': { icon: '🦪', priority: 2 },
-    'fish-fillet': { icon: '🐟', priority: 3 },
-    'crabs': { icon: '🦀', priority: 4 },
-    'clams': { icon: '🐚', priority: 5 },
-    'sushi-sashimi': { icon: '🍣', priority: 6 },
-    'squid-octopus': { icon: '🐙', priority: 7 },
-    'frozen-products': { icon: '❄️', priority: 8 },
-    'platters': { icon: '🍽️', priority: 9 },
-    'family-bbq-value-packs': { icon: '📦', priority: 10 },
-    'condiments-sauces': { icon: '🍋', priority: 11 },
-    'smoked-cured-fish-products': { icon: '🔥', priority: 12 },
-};
-
 function getDayOfWeek() {
     return new Date().toLocaleDateString('en-AU', { weekday: 'long' });
 }
 
 export default async function Home() {
-    const [products, collections] = await Promise.all([
-        getShopifyProducts(),
-        getCollections()
-    ]);
+    const products = await getShopifyProducts();
 
     const day = getDayOfWeek();
     const dayIndex = new Date().getDay();
@@ -86,15 +68,6 @@ export default async function Home() {
         })
         .slice(0, 8);
     const bestBuysFinal = bestBuys.length >= 4 ? bestBuys : products.slice(0, 8);
-
-    // Sort collections by priority
-    const sortedCollections = collections
-        .filter((c: any) => c.handle !== 'all' && c.handle !== 'christmas-orders')
-        .sort((a: any, b: any) => {
-            const pa = CATEGORY_META[a.handle]?.priority ?? 99;
-            const pb = CATEGORY_META[b.handle]?.priority ?? 99;
-            return pa - pb;
-        });
 
     return (
         <div className="min-h-screen bg-theme-primary flex flex-col transition-colors duration-300">
@@ -150,55 +123,6 @@ export default async function Home() {
                 <section className="container mx-auto px-4 md:px-6 py-8">
                     <div className="border-t border-theme-subtle pt-10">
                         <RegionalMapLazy />
-                    </div>
-                </section>
-
-                {/* Online Delivery — Browse All Products */}
-                <section className="container mx-auto px-4 md:px-6 py-8">
-                    <div className="border-t border-theme-subtle pt-10">
-                        <div className="flex items-end justify-between mb-4">
-                            <div>
-                                <div className="inline-flex items-center gap-2 text-[#FF8543] font-semibold tracking-wider uppercase text-sm mb-2">
-                                    <Globe size={16} /> Online &amp; Delivery
-                                </div>
-                                <h2 className="text-3xl font-serif font-bold text-theme-primary">Shop Our Full Range</h2>
-                                <p className="text-theme-muted text-sm mt-2 max-w-xl">
-                                    Browse our complete selection of premium seafood. Order online and get it delivered fresh to your door.
-                                </p>
-                            </div>
-                            <Link href="/collections/all" className="hidden md:flex items-center text-[#FF8543] hover:text-theme-primary transition-colors text-sm font-medium gap-1">
-                                View All <ChevronRight size={16} />
-                            </Link>
-                        </div>
-
-                        {/* Category pills */}
-                        <div className="flex flex-wrap gap-2 mb-8">
-                            {sortedCollections.map((col: any) => {
-                                const meta = CATEGORY_META[col.handle];
-                                return (
-                                    <Link
-                                        key={col.handle}
-                                        href={`/collections/${col.handle}`}
-                                        className="px-4 py-2 rounded-full bg-theme-card border border-theme-subtle text-sm font-medium text-theme-secondary hover:border-[#FF8543]/50 hover:text-[#FF8543] transition-colors"
-                                    >
-                                        {meta?.icon} {col.title}
-                                    </Link>
-                                );
-                            })}
-                        </div>
-
-                        {/* Products grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            {products.slice(0, 12).map((product: any) => (
-                                <ProductCard key={product.handle} product={product} />
-                            ))}
-                        </div>
-
-                        <div className="flex justify-center mt-10">
-                            <Link href="/collections/all" className="px-8 py-3 bg-[#FF8543] hover:bg-[#E2743A] text-white font-bold rounded-full transition-colors shadow-lg">
-                                Browse All Products
-                            </Link>
-                        </div>
                     </div>
                 </section>
 
