@@ -8,6 +8,7 @@ import CartSidebar from '@/components/CartSidebar';
 import ThemeToggle from '@/components/ThemeToggle';
 import SearchBar from '@/components/SearchBar';
 import Footer from '@/components/Footer';
+import MobileMenu from '@/components/MobileMenu';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' })
@@ -69,7 +70,7 @@ export default function RootLayout({
                   {/* Central Search Bar */}
                   <SearchBar />
 
-                  {/* Actions (Theme Toggle, Cart & Mobile Menu) */}
+                  {/* Actions (Theme Toggle, Cart) */}
                   <div className="flex items-center gap-3 shrink-0">
                     <ThemeToggle />
                     <CartIcon />
@@ -78,6 +79,20 @@ export default function RootLayout({
                 </div>
               </header>
 
+              {/* Mobile Nav Links */}
+              <nav className="lg:hidden sticky top-20 z-40 w-full bg-theme-header backdrop-blur-md border-b border-theme-accent overflow-x-auto scrollbar-hide">
+                <div className="flex items-center gap-1 px-4 py-2 min-w-max">
+                  <a href="/" className="text-theme-secondary hover:text-[#E2743A] transition-colors text-sm font-medium px-3 py-1.5 rounded-full whitespace-nowrap">Our Business</a>
+                  <a href="/about" className="text-theme-secondary hover:text-[#E2743A] transition-colors text-sm font-medium px-3 py-1.5 rounded-full whitespace-nowrap">About Us</a>
+                  <a href="/our-partner" className="text-theme-secondary hover:text-[#E2743A] transition-colors text-sm font-medium px-3 py-1.5 rounded-full whitespace-nowrap">Our Partner</a>
+                  <a href="/our-products" className="text-theme-secondary hover:text-[#E2743A] transition-colors text-sm font-medium px-3 py-1.5 rounded-full whitespace-nowrap">Our Products</a>
+                  <a href="/deals" className="text-theme-secondary hover:text-[#E2743A] transition-colors text-sm font-medium px-3 py-1.5 rounded-full whitespace-nowrap flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-[#FF7F50] animate-pulse"></span>
+                    Deals
+                  </a>
+                </div>
+              </nav>
+
               <main className="flex-grow w-full">
                 {children}
               </main>
@@ -85,6 +100,7 @@ export default function RootLayout({
               <CartSidebar />
               <Footer />
             </div>
+            <MobileMenu />
           </CartProvider>
         </ThemeProvider>
       </body>

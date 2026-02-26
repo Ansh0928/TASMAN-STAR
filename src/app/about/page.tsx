@@ -1,13 +1,13 @@
-import { Anchor, Users, Truck, ShieldCheck, Clock, MapPin, Phone, Mail } from 'lucide-react';
+import { Anchor, Users, Truck, ShieldCheck, Clock, MapPin, Phone } from 'lucide-react';
 
 const TIMELINE = [
     {
-        title: 'Humble Beginnings',
-        description: 'Peter Duncombe Sr. starts supplying fresh seafood to the Gold Coast, building relationships with local fishers and restaurants.',
+        title: 'Getting Started',
+        description: 'Tasman Star begins supplying fresh seafood to the Gold Coast, building relationships with local fishers and restaurants.',
     },
     {
-        title: 'Family Grows',
-        description: 'Sons Peter Jr. and Mathew join the business, expanding operations across wholesale, retail, and freight.',
+        title: 'Growing Operations',
+        description: 'The business expands across wholesale, retail, and freight — becoming a one-stop seafood supplier.',
     },
     {
         title: 'Fleet Expansion',
@@ -49,27 +49,27 @@ export default function AboutPage() {
             {/* Hero */}
             <div className="w-full bg-[#0A192F] py-16 md:py-24">
                 <div className="container mx-auto px-6 text-center">
-                    <p className="text-[#FF8543] font-bold tracking-[0.3em] uppercase text-xs mb-4">Our Story</p>
+                    <p className="text-[#FF8543] font-bold tracking-[0.3em] uppercase text-xs mb-4">Tasman Star</p>
                     <h1 className="font-serif text-4xl md:text-6xl font-bold text-white mb-4">About Us</h1>
                     <p className="text-slate-300 max-w-2xl mx-auto text-lg">
-                        A family business built on three generations of passion for seafood and the ocean.
+                        Gold Coast&apos;s trusted seafood destination — wholesale, retail, fleet, and freight all under one roof.
                     </p>
                 </div>
             </div>
 
             <main className="flex flex-col w-full">
 
-                {/* Our Story */}
+                {/* About Tasman Star */}
                 <section className="container mx-auto px-4 md:px-8 py-16 max-w-5xl">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                         <div>
-                            <p className="text-[#FF8543] font-bold tracking-widest uppercase text-xs mb-3">The Duncombe Family</p>
-                            <h2 className="font-serif text-3xl md:text-4xl font-bold text-theme-primary mb-6">From Humble Beginnings to a Gold Coast Icon</h2>
+                            <p className="text-[#FF8543] font-bold tracking-widest uppercase text-xs mb-3">Who We Are</p>
+                            <h2 className="font-serif text-3xl md:text-4xl font-bold text-theme-primary mb-6">Tasman Star Seafood Market</h2>
                             <p className="text-theme-muted leading-relaxed mb-4">
-                                Tasman Star Seafood Market was founded by Peter Duncombe Sr., whose lifetime of industry experience shaped the business from the ground up. What started as a small operation has grown into one of the Gold Coast&apos;s most trusted seafood destinations.
+                                Tasman Star is one of the Gold Coast&apos;s most trusted seafood businesses. What started as a small operation has grown into a complete end-to-end seafood supply chain — from our own commercial trawler fleet to two retail stores, a wholesale division, and a dedicated freight operation.
                             </p>
                             <p className="text-theme-muted leading-relaxed mb-4">
-                                Joined by his sons Peter Jr. and Mathew, the Duncombe family expanded operations to include their own commercial prawn trawler fleet, significant partnerships with commercial fishers and industry-leading suppliers, and a dedicated fish freight operation.
+                                We operate our own prawn trawler fleet off Australia&apos;s east coast, work with significant partnerships across commercial fishers and industry-leading suppliers, and run a temperature-controlled freight network connecting Bundaberg, Brisbane, and Sydney.
                             </p>
                             <p className="text-theme-muted leading-relaxed">
                                 With direct connections to the Sydney Fish Market — the largest commercial fish market in the southern hemisphere — Tasman Star delivers the widest range of Australian and selected imported seafood products, backed by over 25 years of experience.
@@ -132,25 +132,19 @@ export default function AboutPage() {
                     </div>
                 </section>
 
-                {/* The Team */}
+                {/* Mathew Duncombe */}
                 <section className="container mx-auto px-4 md:px-8 py-12 max-w-4xl">
                     <div className="border-t border-theme-subtle pt-12">
-                        <h2 className="font-serif text-3xl font-bold text-theme-primary text-center mb-10">The Family Behind Tasman Star</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            {[
-                                { name: 'Peter Duncombe Sr.', role: 'Founder', desc: 'A lifetime of industry experience and the vision behind Tasman Star.' },
-                                { name: 'Peter Duncombe Jr.', role: 'Director', desc: 'Driving wholesale growth and fleet operations across the east coast.' },
-                                { name: 'Mathew Duncombe', role: 'Director', desc: 'Leading retail, online operations, and customer experience.' },
-                            ].map((person) => (
-                                <div key={person.name} className="bg-theme-card rounded-2xl border border-theme-subtle p-6 text-center shadow-sm">
-                                    <div className="w-20 h-20 rounded-full bg-[#0A192F] flex items-center justify-center mx-auto mb-4">
-                                        <Users size={32} className="text-[#FF8543]" />
-                                    </div>
-                                    <h3 className="font-serif text-lg font-bold text-theme-primary">{person.name}</h3>
-                                    <p className="text-[#FF8543] text-sm font-medium mb-2">{person.role}</p>
-                                    <p className="text-theme-muted text-sm">{person.desc}</p>
+                        <h2 className="font-serif text-3xl font-bold text-theme-primary text-center mb-10">Leadership</h2>
+                        <div className="max-w-sm mx-auto">
+                            <div className="bg-theme-card rounded-2xl border border-theme-subtle p-6 text-center shadow-sm">
+                                <div className="w-20 h-20 rounded-full bg-[#0A192F] flex items-center justify-center mx-auto mb-4">
+                                    <Users size={32} className="text-[#FF8543]" />
                                 </div>
-                            ))}
+                                <h3 className="font-serif text-lg font-bold text-theme-primary">Mathew Duncombe</h3>
+                                <p className="text-[#FF8543] text-sm font-medium mb-2">Director</p>
+                                <p className="text-theme-muted text-sm">Leading retail, online operations, wholesale growth, and customer experience at Tasman Star.</p>
+                            </div>
                         </div>
                     </div>
                 </section>

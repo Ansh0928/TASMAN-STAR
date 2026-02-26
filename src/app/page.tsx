@@ -75,8 +75,8 @@ export default async function Home() {
             {/* Hero Header */}
             <div className="w-full bg-[#0A192F] py-16 md:py-24">
                 <div className="container mx-auto px-6 text-center">
-                    <p className="text-[#FF8543] font-bold tracking-[0.3em] uppercase text-xs mb-4">Tasman Star Seafoods</p>
-                    <h1 className="font-serif text-4xl md:text-6xl font-bold text-white mb-4">Our Business</h1>
+                    <h1 className="font-serif text-5xl md:text-7xl font-bold text-white mb-4">Tasman Star Seafoods</h1>
+                    <p className="text-[#FF8543] font-bold tracking-[0.3em] uppercase text-sm mb-4">Our Services</p>
                     <p className="text-slate-300 max-w-2xl mx-auto text-lg">
                         From the boats to the cold trucks, and straight to your business or home. We operate a complete end-to-end seafood supply chain.
                     </p>
