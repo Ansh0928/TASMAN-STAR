@@ -79,3 +79,13 @@ body {
 .text-theme-secondary { color: var(--text-secondary); }
 .text-theme-muted { color: var(--text-muted); }
 .text-theme-accent { color: var(--text-accent); }
+
+/* Spinning logos animations */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes spin-reverse {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
